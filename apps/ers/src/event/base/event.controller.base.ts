@@ -17,6 +17,7 @@ import { Request } from "express";
 import { plainToClass } from "class-transformer";
 import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
 import { EventService } from "../event.service";
+import { Public } from "../../decorators/public.decorator";
 import { EventCreateInput } from "./EventCreateInput";
 import { Event } from "./Event";
 import { EventFindManyArgs } from "./EventFindManyArgs";
@@ -25,6 +26,7 @@ import { EventUpdateInput } from "./EventUpdateInput";
 
 export class EventControllerBase {
   constructor(protected readonly service: EventService) {}
+  @Public()
   @common.Post()
   @swagger.ApiCreatedResponse({ type: Event })
   async createEvent(@common.Body() data: EventCreateInput): Promise<Event> {
