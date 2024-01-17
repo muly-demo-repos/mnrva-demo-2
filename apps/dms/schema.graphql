@@ -1,0 +1,272 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input Credentials {
+  password: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: DateTime
+  notIn: [DateTime!]
+}
+
+input DecimalNullableFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: Float
+  notIn: [Float!]
+}
+
+type Device {
+  createdAt: DateTime!
+  deviceId: String
+  deviceName: String
+  events(orderBy: [EventOrderByInput!], skip: Float, take: Float, where: EventWhereInput): [Event!]!
+  id: String!
+  updatedAt: DateTime!
+}
+
+input DeviceCreateInput {
+  deviceId: String
+  deviceName: String
+  events: EventCreateNestedManyWithoutDevicesInput
+}
+
+input DeviceOrderByInput {
+  createdAt: SortOrder
+  deviceId: SortOrder
+  deviceName: SortOrder
+  id: SortOrder
+  updatedAt: SortOrder
+}
+
+input DeviceUpdateInput {
+  deviceId: String
+  deviceName: String
+  events: EventUpdateManyWithoutDevicesInput
+}
+
+input DeviceWhereInput {
+  deviceId: StringNullableFilter
+  deviceName: StringNullableFilter
+  events: EventListRelationFilter
+  id: StringFilter
+}
+
+input DeviceWhereUniqueInput {
+  id: String!
+}
+
+type Event {
+  createdAt: DateTime!
+  device: Device
+  eventType: String
+  humidity: Float
+  id: String!
+  temperature: Float
+  timestamp: DateTime
+  updatedAt: DateTime!
+}
+
+input EventCreateInput {
+  device: DeviceWhereUniqueInput
+  eventType: String
+  humidity: Float
+  temperature: Float
+  timestamp: DateTime
+}
+
+input EventCreateNestedManyWithoutDevicesInput {
+  connect: [EventWhereUniqueInput!]
+}
+
+input EventListRelationFilter {
+  every: EventWhereInput
+  none: EventWhereInput
+  some: EventWhereInput
+}
+
+input EventOrderByInput {
+  createdAt: SortOrder
+  deviceId: SortOrder
+  eventType: SortOrder
+  humidity: SortOrder
+  id: SortOrder
+  temperature: SortOrder
+  timestamp: SortOrder
+  updatedAt: SortOrder
+}
+
+input EventUpdateInput {
+  device: DeviceWhereUniqueInput
+  eventType: String
+  humidity: Float
+  temperature: Float
+  timestamp: DateTime
+}
+
+input EventUpdateManyWithoutDevicesInput {
+  connect: [EventWhereUniqueInput!]
+  disconnect: [EventWhereUniqueInput!]
+  set: [EventWhereUniqueInput!]
+}
+
+input EventWhereInput {
+  device: DeviceWhereUniqueInput
+  eventType: StringNullableFilter
+  humidity: DecimalNullableFilter
+  id: StringFilter
+  temperature: DecimalNullableFilter
+  timestamp: DateTimeNullableFilter
+}
+
+input EventWhereUniqueInput {
+  id: String!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type MetaQueryPayload {
+  count: Float!
+}
+
+type Mutation {
+  createDevice(data: DeviceCreateInput!): Device!
+  createEvent(data: EventCreateInput!): Event!
+  createUser(data: UserCreateInput!): User!
+  deleteDevice(where: DeviceWhereUniqueInput!): Device!
+  deleteEvent(where: EventWhereUniqueInput!): Event!
+  deleteUser(where: UserWhereUniqueInput!): User!
+  login(credentials: Credentials!): UserInfo!
+  updateDevice(data: DeviceUpdateInput!, where: DeviceWhereUniqueInput!): Device!
+  updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User!
+}
+
+type Query {
+  _devicesMeta(where: DeviceWhereInput): MetaQueryPayload!
+  _eventsMeta(where: EventWhereInput): MetaQueryPayload!
+  _usersMeta(where: UserWhereInput): MetaQueryPayload!
+  device(where: DeviceWhereUniqueInput!): Device
+  devices(orderBy: [DeviceOrderByInput!], skip: Float, take: Float, where: DeviceWhereInput): [Device!]!
+  event(where: EventWhereUniqueInput!): Event
+  events(orderBy: [EventOrderByInput!], skip: Float, take: Float, where: EventWhereInput): [Event!]!
+  user(where: UserWhereUniqueInput!): User
+  userInfo: UserInfo!
+  users(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
+}
+
+enum QueryMode {
+  Default
+  Insensitive
+}
+
+enum SortOrder {
+  Asc
+  Desc
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: String
+  notIn: [String!]
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: String
+  notIn: [String!]
+  startsWith: String
+}
+
+type User {
+  createdAt: DateTime!
+  firstName: String
+  id: String!
+  lastName: String
+  roles: JSON!
+  updatedAt: DateTime!
+  username: String!
+}
+
+input UserCreateInput {
+  firstName: String
+  lastName: String
+  password: String!
+  roles: JSON!
+  username: String!
+}
+
+type UserInfo {
+  accessToken: String
+  id: String!
+  roles: [String!]!
+  username: String!
+}
+
+input UserOrderByInput {
+  createdAt: SortOrder
+  firstName: SortOrder
+  id: SortOrder
+  lastName: SortOrder
+  password: SortOrder
+  roles: SortOrder
+  updatedAt: SortOrder
+  username: SortOrder
+}
+
+input UserUpdateInput {
+  firstName: String
+  lastName: String
+  password: String
+  roles: JSON
+  username: String
+}
+
+input UserWhereInput {
+  firstName: StringNullableFilter
+  id: StringFilter
+  lastName: StringNullableFilter
+  username: StringFilter
+}
+
+input UserWhereUniqueInput {
+  id: String!
+}
