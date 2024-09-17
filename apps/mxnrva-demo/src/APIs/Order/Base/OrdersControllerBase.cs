@@ -291,7 +291,7 @@ public abstract class OrdersControllerBase : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("sp-get-order-balance")]
+    [HttpPost("sp-get-order-balance")]
     [Authorize(Roles = "user")]
     public async Task<OrderBalanceResult> SpGetOrderBalance(
         [FromBody()] GetOrderBalanceArgs getOrderBalanceArgsDto
