@@ -71,4 +71,36 @@ public interface IOrdersService
         OrderWhereUniqueInput uniqueId,
         OrderItemWhereUniqueInput[] orderItemsId
     );
+
+    /// <summary>
+    /// Connect multiple Payments records to Order
+    /// </summary>
+    public Task ConnectPayments(
+        OrderWhereUniqueInput uniqueId,
+        PaymentWhereUniqueInput[] paymentsId
+    );
+
+    /// <summary>
+    /// Disconnect multiple Payments records from Order
+    /// </summary>
+    public Task DisconnectPayments(
+        OrderWhereUniqueInput uniqueId,
+        PaymentWhereUniqueInput[] paymentsId
+    );
+
+    /// <summary>
+    /// Find multiple Payments records for Order
+    /// </summary>
+    public Task<List<Payment>> FindPayments(
+        OrderWhereUniqueInput uniqueId,
+        PaymentFindManyArgs PaymentFindManyArgs
+    );
+
+    /// <summary>
+    /// Update multiple Payments records for Order
+    /// </summary>
+    public Task UpdatePayments(
+        OrderWhereUniqueInput uniqueId,
+        PaymentWhereUniqueInput[] paymentsId
+    );
 }

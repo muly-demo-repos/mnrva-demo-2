@@ -15,4 +15,6 @@ public class MxnrvaDemoDbContext : IdentityDbContext<IdentityUser>
     public DbSet<CustomerDbModel> Customers { get; set; }
 
     public DbSet<OrderDbModel> Orders { get; set; }
+
+    public DbSet<PaymentDbModel> Payments { get; set; }
 }

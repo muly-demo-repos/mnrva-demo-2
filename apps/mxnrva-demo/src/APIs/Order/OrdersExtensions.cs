@@ -13,6 +13,7 @@ public static class OrdersExtensions
             Customer = model.CustomerId,
             Id = model.Id,
             OrderItems = model.OrderItems?.Select(x => x.Id).ToList(),
+            Payments = model.Payments?.Select(x => x.Id).ToList(),
             Status = model.Status,
             UpdatedAt = model.UpdatedAt,
         };

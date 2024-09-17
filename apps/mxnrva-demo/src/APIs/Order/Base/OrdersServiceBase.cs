@@ -50,6 +50,15 @@ public abstract class OrdersServiceBase : IOrdersService
                 .ToListAsync();
         }
 
+        if (createDto.Payments != null)
+        {
+            order.Payments = await _context
+                .Payments.Where(payment =>
+                    createDto.Payments.Select(t => t.Id).Contains(payment.Id)
+                )
+                .ToListAsync();
+        }
+
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
 
@@ -86,6 +95,7 @@ public abstract class OrdersServiceBase : IOrdersService
         var orders = await _context
             .Orders.Include(x => x.OrderItems)
             .Include(x => x.Customer)
+            .Include(x => x.Payments)
             .ApplyWhere(findManyArgs.Where)
             .ApplySkip(findManyArgs.Skip)
             .ApplyTake(findManyArgs.Take)
@@ -141,6 +151,13 @@ public abstract class OrdersServiceBase : IOrdersService
                 .OrderItems.Where(orderItem =>
                     updateDto.OrderItems.Select(t => t).Contains(orderItem.Id)
                 )
+                .ToListAsync();
+        }
+
+        if (updateDto.Payments != null)
+        {
+            order.Payments = await _context
+                .Payments.Where(payment => updateDto.Payments.Select(t => t).Contains(payment.Id))
                 .ToListAsync();
         }
 
@@ -285,6 +302,115 @@ public abstract class OrdersServiceBase : IOrdersService
         }
 
         order.OrderItems = children;
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Connect multiple Payments records to Order
+    /// </summary>
+    public async Task ConnectPayments(
+        OrderWhereUniqueInput uniqueId,
+        PaymentWhereUniqueInput[] childrenIds
+    )
+    {
+        var parent = await _context
+            .Orders.Include(x => x.Payments)
+            .FirstOrDefaultAsync(x => x.Id == uniqueId.Id);
+        if (parent == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var children = await _context
+            .Payments.Where(t => childrenIds.Select(x => x.Id).Contains(t.Id))
+            .ToListAsync();
+        if (children.Count == 0)
+        {
+            throw new NotFoundException();
+        }
+
+        var childrenToConnect = children.Except(parent.Payments);
+
+        foreach (var child in childrenToConnect)
+        {
+            parent.Payments.Add(child);
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Disconnect multiple Payments records from Order
+    /// </summary>
+    public async Task DisconnectPayments(
+        OrderWhereUniqueInput uniqueId,
+        PaymentWhereUniqueInput[] childrenIds
+    )
+    {
+        var parent = await _context
+            .Orders.Include(x => x.Payments)
+            .FirstOrDefaultAsync(x => x.Id == uniqueId.Id);
+        if (parent == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var children = await _context
+            .Payments.Where(t => childrenIds.Select(x => x.Id).Contains(t.Id))
+            .ToListAsync();
+
+        foreach (var child in children)
+        {
+            parent.Payments?.Remove(child);
+        }
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Find multiple Payments records for Order
+    /// </summary>
+    public async Task<List<Payment>> FindPayments(
+        OrderWhereUniqueInput uniqueId,
+        PaymentFindManyArgs orderFindManyArgs
+    )
+    {
+        var payments = await _context
+            .Payments.Where(m => m.OrderId == uniqueId.Id)
+            .ApplyWhere(orderFindManyArgs.Where)
+            .ApplySkip(orderFindManyArgs.Skip)
+            .ApplyTake(orderFindManyArgs.Take)
+            .ApplyOrderBy(orderFindManyArgs.SortBy)
+            .ToListAsync();
+
+        return payments.Select(x => x.ToDto()).ToList();
+    }
+
+    /// <summary>
+    /// Update multiple Payments records for Order
+    /// </summary>
+    public async Task UpdatePayments(
+        OrderWhereUniqueInput uniqueId,
+        PaymentWhereUniqueInput[] childrenIds
+    )
+    {
+        var order = await _context
+            .Orders.Include(t => t.Payments)
+            .FirstOrDefaultAsync(x => x.Id == uniqueId.Id);
+        if (order == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var children = await _context
+            .Payments.Where(a => childrenIds.Select(x => x.Id).Contains(a.Id))
+            .ToListAsync();
+
+        if (children.Count == 0)
+        {
+            throw new NotFoundException();
+        }
+
+        order.Payments = children;
         await _context.SaveChangesAsync();
     }
 }

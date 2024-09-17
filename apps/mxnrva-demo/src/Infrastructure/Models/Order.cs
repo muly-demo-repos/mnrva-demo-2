@@ -20,6 +20,8 @@ public class OrderDbModel
 
     public List<OrderItemDbModel>? OrderItems { get; set; } = new List<OrderItemDbModel>();
 
+    public List<PaymentDbModel>? Payments { get; set; } = new List<PaymentDbModel>();
+
     [StringLength(256)]
     public string? Status { get; set; }
 

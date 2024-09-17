@@ -204,4 +204,90 @@ public abstract class OrdersControllerBase : ControllerBase
 
         return NoContent();
     }
+
+    /// <summary>
+    /// Connect multiple Payments records to Order
+    /// </summary>
+    [HttpPost("{Id}/payments")]
+    [Authorize(Roles = "user")]
+    public async Task<ActionResult> ConnectPayments(
+        [FromRoute()] OrderWhereUniqueInput uniqueId,
+        [FromQuery()] PaymentWhereUniqueInput[] paymentsId
+    )
+    {
+        try
+        {
+            await _service.ConnectPayments(uniqueId, paymentsId);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Disconnect multiple Payments records from Order
+    /// </summary>
+    [HttpDelete("{Id}/payments")]
+    [Authorize(Roles = "user")]
+    public async Task<ActionResult> DisconnectPayments(
+        [FromRoute()] OrderWhereUniqueInput uniqueId,
+        [FromBody()] PaymentWhereUniqueInput[] paymentsId
+    )
+    {
+        try
+        {
+            await _service.DisconnectPayments(uniqueId, paymentsId);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Find multiple Payments records for Order
+    /// </summary>
+    [HttpGet("{Id}/payments")]
+    [Authorize(Roles = "user")]
+    public async Task<ActionResult<List<Payment>>> FindPayments(
+        [FromRoute()] OrderWhereUniqueInput uniqueId,
+        [FromQuery()] PaymentFindManyArgs filter
+    )
+    {
+        try
+        {
+            return Ok(await _service.FindPayments(uniqueId, filter));
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
+    /// <summary>
+    /// Update multiple Payments records for Order
+    /// </summary>
+    [HttpPatch("{Id}/payments")]
+    [Authorize(Roles = "user")]
+    public async Task<ActionResult> UpdatePayments(
+        [FromRoute()] OrderWhereUniqueInput uniqueId,
+        [FromBody()] PaymentWhereUniqueInput[] paymentsId
+    )
+    {
+        try
+        {
+            await _service.UpdatePayments(uniqueId, paymentsId);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
 }
