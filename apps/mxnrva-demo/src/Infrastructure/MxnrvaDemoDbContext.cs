@@ -10,15 +10,9 @@ public class MxnrvaDemoDbContext : IdentityDbContext<IdentityUser>
     public MxnrvaDemoDbContext(DbContextOptions<MxnrvaDemoDbContext> options)
         : base(options) { }
 
-    public DbSet<PassengerDbModel> Passengers { get; set; }
+    public DbSet<OrderItemDbModel> OrderItems { get; set; }
 
-    public DbSet<FlightDbModel> Flights { get; set; }
+    public DbSet<CustomerDbModel> Customers { get; set; }
 
-    public DbSet<AirlineDbModel> Airlines { get; set; }
-
-    public DbSet<SeatDbModel> Seats { get; set; }
-
-    public DbSet<BookingDbModel> Bookings { get; set; }
-
-    public DbSet<AircraftDbModel> AircraftItems { get; set; }
+    public DbSet<OrderDbModel> Orders { get; set; }
 }
