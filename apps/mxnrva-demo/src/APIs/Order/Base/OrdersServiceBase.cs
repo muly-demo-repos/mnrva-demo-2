@@ -413,4 +413,11 @@ public abstract class OrdersServiceBase : IOrdersService
         order.Payments = children;
         await _context.SaveChangesAsync();
     }
+
+    public async Task<OrderBalanceResult> SpGetOrderBalance(
+        GetOrderBalanceArgs getOrderBalanceArgsDto
+    )
+    {
+        throw new NotImplementedException();
+    }
 }
