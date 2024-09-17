@@ -10,6 +10,8 @@ public class OrderCreateInput
 
     public List<OrderItem>? OrderItems { get; set; }
 
+    public List<Payment>? Payments { get; set; }
+
     public string? Status { get; set; }
 
     public DateTime UpdatedAt { get; set; }

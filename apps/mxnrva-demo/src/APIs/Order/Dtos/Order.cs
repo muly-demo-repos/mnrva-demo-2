@@ -10,6 +10,8 @@ public class Order
 
     public List<string>? OrderItems { get; set; }
 
+    public List<string>? Payments { get; set; }
+
     public string? Status { get; set; }
 
     public DateTime UpdatedAt { get; set; }
