@@ -13,15 +13,16 @@ public class SeedDevelopmentData
     )
     {
         var context = serviceProvider.GetRequiredService<MxnrvaDemoDbContext>();
-        var amplicationRoles = configuration
-            .GetSection("AmplicationRoles")
-            .AsEnumerable()
-            .Where(x => x.Value != null)
-            .Select(x => x.Value.ToString())
-            .ToArray();
-
+        var userStore = new UserStore<IdentityUser>(context);
         var usernameValue = "test@email.com";
         var passwordValue = "P@ssw0rd!";
+
+        var existingUser = await userStore.FindByEmailAsync(usernameValue);
+        if (existingUser != null)
+        {
+            return;
+        }
+
         var user = new IdentityUser
         {
             Email = usernameValue,
@@ -29,14 +30,18 @@ public class SeedDevelopmentData
             NormalizedUserName = usernameValue.ToUpperInvariant(),
             NormalizedEmail = usernameValue.ToUpperInvariant(),
         };
-
         var password = new PasswordHasher<IdentityUser>();
         var hashed = password.HashPassword(user, passwordValue);
         user.PasswordHash = hashed;
-        var userStore = new UserStore<IdentityUser>(context);
         await userStore.CreateAsync(user);
-        var _roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+        var amplicationRoles = configuration
+            .GetSection("AmplicationRoles")
+            .AsEnumerable()
+            .Where(x => x.Value != null)
+            .Select(x => x.Value.ToString())
+            .ToArray();
+        var _roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         foreach (var role in amplicationRoles)
         {
             await userStore.AddToRoleAsync(user, _roleManager.NormalizeKey(role));
